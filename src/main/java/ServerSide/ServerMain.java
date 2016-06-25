@@ -1,19 +1,17 @@
-package ClientSide;
+package ServerSide;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import org.hibernate.Session;
-import HibernateUtil.*;
 
 
-public class Main extends Application {
+public class ServerMain extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception{
-        Parent root = FXMLLoader.load(getClass().getResource("/VistaPrincipal.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("/ServerView.fxml"));
         primaryStage.setTitle("RMISecurity Camera");
         primaryStage.setScene(new Scene(root, 300, 275));
       primaryStage.show();

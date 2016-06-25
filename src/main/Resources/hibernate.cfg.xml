@@ -16,7 +16,7 @@
 
       </property>
     <mapping resource="Usuario.hbm.xml"/>
-    <mapping class="ClientSide.UserEntity"/>
+    <mapping class="ServerSide.UserEntity"/>
     <!-- DB schema will be updated if needed -->
     <!-- <property name="hbm2ddl.auto">update</property> -->
   </session-factory>

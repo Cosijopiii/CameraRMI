@@ -1,4 +1,4 @@
-package ClientSide;
+package ServerSide;
 
 import javax.persistence.*;
 
