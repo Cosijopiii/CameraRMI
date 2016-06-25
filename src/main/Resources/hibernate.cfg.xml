@@ -6,7 +6,16 @@
   <session-factory>
     <property name="connection.url">jdbc:mysql://localhost:3306/user</property>
     <property name="connection.driver_class">com.mysql.jdbc.Driver</property>
-    <mapping resource="ClientSide/Usuario.hbm.xml"/>
+      <property name="hibernate.dialect">
+          org.hibernate.dialect.MySQLDialect
+      </property>
+      <property name="hibernate.connection.username">
+          root
+      </property>
+      <property name="hibernate.connection.password">
+
+      </property>
+    <mapping resource="Usuario.hbm.xml"/>
     <mapping class="ClientSide.UserEntity"/>
     <!-- DB schema will be updated if needed -->
     <!-- <property name="hbm2ddl.auto">update</property> -->
