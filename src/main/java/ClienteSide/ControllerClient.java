@@ -15,6 +15,7 @@ import org.opencv.imgcodecs.Imgcodecs;
 import org.opencv.objdetect.CascadeClassifier;
 import org.opencv.videoio.VideoCapture;
 
+import javax.imageio.ImageIO;
 import java.io.ByteArrayInputStream;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
@@ -77,10 +78,11 @@ public class ControllerClient {
             {
                 System.err.println("Exception in stopping the frame capture, trying to release the camera now... " + e);
             }
+            capture.release();
+            imgA.setImage(null);
+            imgB.setImage(null);
+
         }
-        capture.release();
-        imgA.setImage(null);
-        imgB.setImage(null);
 
     }
 
@@ -131,6 +133,8 @@ public class ControllerClient {
         Imgcodecs.imencode(".png", frame, buffer);
         // build and return an Image created from the image encoded in the
         // buffer
+
+
         return new Image(new ByteArrayInputStream(buffer.toArray()));
     }
 

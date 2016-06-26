@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
-
 
 <AnchorPane prefHeight="439.0" prefWidth="553.0" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ServerSide.ControllerServer">
    <children>
@@ -27,5 +28,7 @@
           </Menu>
         </menus>
       </MenuBar>
+      <ImageView fx:id="frame" fitHeight="316.0" fitWidth="386.0" layoutX="84.0" layoutY="62.0" pickOnBounds="true" preserveRatio="true" />
+      <Button layoutX="251.0" layoutY="400.0" mnemonicParsing="false" onAction="#start" text="ok" />
    </children>
 </AnchorPane>
