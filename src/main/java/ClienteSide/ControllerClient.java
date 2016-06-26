@@ -3,6 +3,8 @@ package ClienteSide;
 /**
  * Created by COSI on 25/06/2016.
  */
+import ServerRMI.IVideoData;
+import ServerRMI.VideoData;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -17,6 +19,10 @@ import org.opencv.videoio.VideoCapture;
 
 import javax.imageio.ImageIO;
 import java.io.ByteArrayInputStream;
+import java.net.MalformedURLException;
+import java.rmi.Naming;
+import java.rmi.NotBoundException;
+import java.rmi.RemoteException;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -32,7 +38,7 @@ public class ControllerClient {
 
     @FXML
     private Button Start;
-
+    private IVideoData iVideoData;
     // a timer for acquiring the video stream
     private ScheduledExecutorService timer;
 
@@ -44,6 +50,12 @@ public class ControllerClient {
     protected void init()
     {
         this.capture = new VideoCapture();
+        try {
+            iVideoData= (IVideoData) Naming.lookup("rmi://"+"localhost"+":1099/videoData");
+        } catch (NotBoundException | MalformedURLException | RemoteException e) {
+            e.printStackTrace();
+        }
+
     }
     @FXML
     protected  void Start() {
@@ -59,7 +71,7 @@ public class ControllerClient {
                 Runnable Grabber =()->{
                   Image imgToShow=grabFrame();
                     imgA.setImage(imgToShow);
-                    imgB.setImage(imgToShow);
+                   // imgB.setImage(imgToShow);
                 };
 
                 timer = Executors.newSingleThreadScheduledExecutor();
@@ -133,9 +145,13 @@ public class ControllerClient {
         Imgcodecs.imencode(".png", frame, buffer);
         // build and return an Image created from the image encoded in the
         // buffer
-
-
-        return new Image(new ByteArrayInputStream(buffer.toArray()));
+     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(buffer.toArray());
+        try {
+            iVideoData.setVideoData(new VideoData(buffer.toArray(),1,"TEST","LOCALHOST"));
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+        return new Image(byteArrayInputStream);
     }
 
 

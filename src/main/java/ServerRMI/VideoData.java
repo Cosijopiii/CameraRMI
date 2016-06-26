@@ -8,7 +8,7 @@ import java.io.Serializable;
  */
 public class VideoData implements Serializable {
 
-    private ByteArrayInputStream byteArrayInputStream;
+    private  byte[] byteArray;
     private int cameraClient;
     private String nameCameraClient;
     private String ip;
@@ -17,8 +17,8 @@ public class VideoData implements Serializable {
 
     }
 
-    public VideoData(ByteArrayInputStream byteArrayInputStream, int cameraClient, String nameCameraClient, String ip) {
-        this.byteArrayInputStream = byteArrayInputStream;
+    public VideoData( byte[] byteArray, int cameraClient, String nameCameraClient, String ip) {
+        this.byteArray = byteArray;
         this.cameraClient = cameraClient;
         this.nameCameraClient = nameCameraClient;
         this.ip = ip;
@@ -32,12 +32,13 @@ public class VideoData implements Serializable {
                 ", cameraClient=" + cameraClient +
                 '}';
     }
-    public ByteArrayInputStream getByteArrayInputStream() {
-        return byteArrayInputStream;
+
+    public byte[] getByteArray() {
+        return byteArray;
     }
 
-    public void setByteArrayInputStream(ByteArrayInputStream byteArrayInputStream) {
-        this.byteArrayInputStream = byteArrayInputStream;
+    public void setByteArray(byte[] byteArray) {
+        this.byteArray = byteArray;
     }
 
     public int getCameraClient() {
