@@ -122,11 +122,9 @@ public class ControllerClient {
                 {
                     // face detection
                    // this.detectAndDisplay(frame);
-
                     // convert the Mat object (OpenCV) to Image (JavaFX)
                     imageToShow = mat2Image(frame);
                 }
-
             }
             catch (Exception e)
             {
@@ -134,7 +132,6 @@ public class ControllerClient {
                 System.err.println("ERROR: " + e);
             }
         }
-
         return imageToShow;
     }
     private Image mat2Image(Mat frame)
