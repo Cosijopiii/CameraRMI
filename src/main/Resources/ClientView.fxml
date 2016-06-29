@@ -1,37 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.control.Menu?>
-<?import javafx.scene.control.MenuBar?>
-<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.effect.Reflection?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane prefHeight="576.0" prefWidth="726.0" xmlns="http://javafx.com/javafx/null" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ClienteSide.ControllerClient">
+<AnchorPane prefHeight="202.0" prefWidth="375.0" style="-fx-background-color: white;" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ClienteSide.ControllerClient">
    <children>
-      <MenuBar prefHeight="25.0" prefWidth="553.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-        <menus>
-          <Menu mnemonicParsing="false" text="File">
-            <items>
-              <MenuItem mnemonicParsing="false" text="Close" />
-            </items>
-          </Menu>
-          <Menu mnemonicParsing="false" text="Edit">
-            <items>
-              <MenuItem mnemonicParsing="false" text="Delete" />
-            </items>
-          </Menu>
-          <Menu mnemonicParsing="false" text="Help">
-            <items>
-              <MenuItem mnemonicParsing="false" text="About" />
-            </items>
-          </Menu>
-        </menus>
-      </MenuBar>
-      <ImageView fx:id="imgA" fitHeight="240.0" fitWidth="320.0" layoutX="14.0" layoutY="175.0" pickOnBounds="true" preserveRatio="true" />
-      <ImageView fx:id="imgB" fitHeight="240.0" fitWidth="320.0" layoutX="392.0" layoutY="175.0" pickOnBounds="true" preserveRatio="true" />
-      <Button fx:id="Start" layoutX="339.0" layoutY="509.0" mnemonicParsing="false" onAction="#Start" prefHeight="35.0" prefWidth="46.0" style="-fx-background-color: red;">
+      <Button fx:id="Start" layoutX="288.0" layoutY="80.0" mnemonicParsing="false" onAction="#Start" prefHeight="35.0" prefWidth="46.0" style="-fx-background-color: red;">
          <graphic>
             <ImageView>
                <image>
@@ -40,5 +19,11 @@
             </ImageView>
          </graphic>
       </Button>
+      <TextArea layoutX="37.0" layoutY="80.0" prefHeight="0.0" prefWidth="212.0">
+         <effect>
+            <Reflection />
+         </effect></TextArea>
+      <Label layoutX="36.0" layoutY="47.0" text="Introdusca el ID de la computadora" />
+      <Label layoutX="278.0" layoutY="130.0" prefHeight="42.0" prefWidth="76.0" text="Iniciar transmicion" textAlignment="CENTER" wrapText="true" />
    </children>
 </AnchorPane>

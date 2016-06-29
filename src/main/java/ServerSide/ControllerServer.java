@@ -32,7 +32,7 @@ public class ControllerServer {
           frame.setImage(img);
         };
         timer= Executors.newSingleThreadScheduledExecutor();
-        timer.scheduleAtFixedRate(grab,0,33, TimeUnit.MILLISECONDS);
+        timer.scheduleAtFixedRate(grab,0,15, TimeUnit.MILLISECONDS);
 
 
     }

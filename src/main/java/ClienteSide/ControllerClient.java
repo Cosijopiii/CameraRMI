@@ -51,7 +51,7 @@ public class ControllerClient {
     {
         this.capture = new VideoCapture();
         try {
-            iVideoData= (IVideoData) Naming.lookup("rmi://"+"localhost"+":1099/videoData");
+            iVideoData= (IVideoData) Naming.lookup("rmi://"+"192.168.0.3"+":1099/videoData");
         } catch (NotBoundException | MalformedURLException | RemoteException e) {
             e.printStackTrace();
         }
