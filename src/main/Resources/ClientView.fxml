@@ -8,9 +8,9 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane prefHeight="202.0" prefWidth="375.0" style="-fx-background-color: white;" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ClienteSide.ControllerClient">
+<AnchorPane prefHeight="202.0" prefWidth="375.0" style="-fx-background-color: white;" xmlns="http://javafx.com/javafx/null" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ClienteSide.ControllerClient">
    <children>
-      <Button fx:id="Start" layoutX="288.0" layoutY="80.0" mnemonicParsing="false" onAction="#Start" prefHeight="35.0" prefWidth="46.0" style="-fx-background-color: red;">
+      <Button fx:id="Start" layoutX="288.0" layoutY="80.0" mnemonicParsing="false" onAction="#Start" prefHeight="35.0" prefWidth="46.0">
          <graphic>
             <ImageView>
                <image>
