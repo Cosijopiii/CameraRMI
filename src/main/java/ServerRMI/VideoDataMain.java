@@ -11,7 +11,9 @@ import java.rmi.registry.Registry;
  */
 public class VideoDataMain {
     public static void main(String agv[]) throws RemoteException {
+
         Registry registry = LocateRegistry.createRegistry(1099);
+
         IVideoDataimplementation iVideoDataimplementation=new IVideoDataimplementation();
         try {
             Naming.rebind("rmi://"+"localhost"+":1099/videoData",iVideoDataimplementation);
