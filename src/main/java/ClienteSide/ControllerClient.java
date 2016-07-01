@@ -5,36 +5,26 @@ package ClienteSide;
  */
 import ServerRMI.IVideoData;
 import ServerRMI.VideoData;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfByte;
 import org.opencv.imgcodecs.Imgcodecs;
-import org.opencv.objdetect.CascadeClassifier;
 import org.opencv.videoio.VideoCapture;
 
-import javax.imageio.ImageIO;
 import java.io.ByteArrayInputStream;
 import java.net.MalformedURLException;
 import java.rmi.Naming;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
-import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 public class ControllerClient {
 
-    @FXML
-    private ImageView imgA;
-
-    @FXML
-    private ImageView imgB;
 
     @FXML
     private Button Start;
@@ -47,7 +37,7 @@ public class ControllerClient {
 
     // a flag to change the button behavior
     private boolean cameraActive;
-    protected void init()
+    void init()
     {
         this.capture = new VideoCapture();
         try {
@@ -59,20 +49,13 @@ public class ControllerClient {
     }
     @FXML
     protected  void Start() {
-        imgA.setFitWidth(320);
-        imgB.setFitWidth(320);
-        imgA.setPreserveRatio(true);
-        imgB.setPreserveRatio(true);
+
         if (!cameraActive){
             capture.open(0);
             if (capture.isOpened()){
                 cameraActive=true;
 
-                Runnable Grabber =()->{
-                  Image imgToShow=grabFrame();
-                    imgA.setImage(imgToShow);
-                   // imgB.setImage(imgToShow);
-                };
+                Runnable Grabber = this::grabFrame;
 
                 timer = Executors.newSingleThreadScheduledExecutor();
                 timer.scheduleAtFixedRate(Grabber,0,33, TimeUnit.MILLISECONDS);
@@ -91,8 +74,7 @@ public class ControllerClient {
                 System.err.println("Exception in stopping the frame capture, trying to release the camera now... " + e);
             }
             capture.release();
-            imgA.setImage(null);
-            imgB.setImage(null);
+
 
         }
 

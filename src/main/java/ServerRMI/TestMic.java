@@ -1,41 +1,45 @@
 package ServerRMI;
 
-import javax.sound.sampled.AudioFormat;
-import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.DataLine;
-import javax.sound.sampled.SourceDataLine;
-import javax.sound.sampled.TargetDataLine;
+import javax.sound.sampled.*;
+import java.io.ByteArrayOutputStream;
 
 public class TestMic {
 
 	public static void main(String[] args) {
-		AudioFormat format = new AudioFormat(44100, 16, 2, true, true);
-
-		DataLine.Info targetInfo = new DataLine.Info(TargetDataLine.class, format);
-		DataLine.Info sourceInfo = new DataLine.Info(SourceDataLine.class, format);
-
+		AudioFormat format = new AudioFormat(8000.0f, 16, 1, true, true);
+		TargetDataLine microphone;
+		SourceDataLine speakers;
 		try {
-			TargetDataLine targetLine = (TargetDataLine) AudioSystem.getLine(targetInfo);
-			targetLine.open(format);
-			targetLine.start();
-			
-			SourceDataLine sourceLine = (SourceDataLine) AudioSystem.getLine(sourceInfo);
-			sourceLine.open(format);
-			sourceLine.start();
+			microphone = AudioSystem.getTargetDataLine(format);
 
+			DataLine.Info info = new DataLine.Info(TargetDataLine.class, format);
+			microphone = (TargetDataLine) AudioSystem.getLine(info);
+			microphone.open(format);
+
+			ByteArrayOutputStream out = new ByteArrayOutputStream();
 			int numBytesRead;
-			byte[] targetData = new byte[targetLine.getBufferSize() / 5];
+			int CHUNK_SIZE = 1024;
+			byte[] data = new byte[microphone.getBufferSize() / 5];
+			microphone.start();
 
-			while (true) {
-				numBytesRead = targetLine.read(targetData, 0, targetData.length);
-
-				if (numBytesRead == -1)	break;
-
-				sourceLine.write(targetData, 0, numBytesRead);
+			int bytesRead = 0;
+			DataLine.Info dataLineInfo = new DataLine.Info(SourceDataLine.class, format);
+			speakers = (SourceDataLine) AudioSystem.getLine(dataLineInfo);
+			speakers.open(format);
+			speakers.start();
+			while (bytesRead < 100000) {
+				numBytesRead = microphone.read(data, 0, CHUNK_SIZE);
+				bytesRead += numBytesRead;
+				// write the mic data to a stream for use later
+				out.write(data, 0, numBytesRead);
+				// write mic data to stream for immediate playback
+				speakers.write(data, 0, numBytesRead);
 			}
-		}
-		catch (Exception e) {
-			System.err.println(e);
+			speakers.drain();
+			speakers.close();
+			microphone.close();
+		} catch (LineUnavailableException e) {
+			e.printStackTrace();
 		}
 	}
 
