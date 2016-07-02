@@ -19,7 +19,7 @@ public class ClienteMain extends Application {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/ClientView.fxml"));
         Parent root = loader.load();
         primaryStage.setTitle("RMISecurity Camera");
-        primaryStage.setScene(new Scene(root,726.0,576.0));
+        primaryStage.setScene(new Scene(root));
         primaryStage.show();
         ControllerClient controllerClient=loader.getController();
         controllerClient.init();

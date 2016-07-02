@@ -14,15 +14,16 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="630.0" prefWidth="744.0" style="-fx-background-color: #455A64;" xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ServerSide.ControllerServer">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="630.0" prefWidth="744.0" style="-fx-background-color: #455A64;" xmlns="http://javafx.com/javafx/null" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ServerSide.ControllerServer">
    <children>
       <MenuBar prefHeight="25.0" prefWidth="553.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <menus>
-          <Menu mnemonicParsing="false" text="Configuracion">
+          <Menu mnemonicParsing="false" text="Configuracion Servidor">
             <items>
               <MenuItem fx:id="mntStartServer" mnemonicParsing="false" onAction="#serverON" text="Inciar Servidor" />
                   <MenuItem fx:id="mntStopServer" mnemonicParsing="false" onAction="#serverOFF" text="Detener Servidor" />
                   <MenuItem fx:id="mntResetServer" mnemonicParsing="false" onAction="#serverReset" text="Reiniciar Servidor" />
+                  <MenuItem fx:id="mntIniciarCamaras" mnemonicParsing="false" onAction="#start" text="Iniciar Camaras" />
             </items>
           </Menu>
         </menus>
@@ -31,7 +32,7 @@
          <children>
             <Pane layoutX="35.0" layoutY="41.0" style="-fx-border-color: white;">
                <children>
-                  <ImageView fx:id="frame" fitHeight="313.0" fitWidth="389.0" pickOnBounds="true" preserveRatio="true">
+                  <ImageView fx:id="frame" fitHeight="313.0" fitWidth="389.0" layoutX="1.0" layoutY="2.0" pickOnBounds="true" preserveRatio="true">
                      <effect>
                         <Glow />
                      </effect>
@@ -59,37 +60,55 @@
                <children>
                   <Pane layoutX="132.0" prefHeight="151.0" prefWidth="131.0">
                      <children>
-                        <ImageView fx:id="Camera1" fitHeight="125.0" fitWidth="131.0" pickOnBounds="true" preserveRatio="true" />
+                        <ImageView fx:id="Camera1" fitHeight="125.0" fitWidth="131.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@img/forbidden.png" />
+                           </image></ImageView>
                         <Button fx:id="btnC2" layoutX="37.0" layoutY="125.0" mnemonicParsing="false" onAction="#show" text="Mostrar" />
                      </children>
                   </Pane>
                   <Pane prefHeight="151.0" prefWidth="131.0">
                      <children>
-                        <ImageView fx:id="Camera0" fitHeight="123.0" fitWidth="131.0" pickOnBounds="true" preserveRatio="true" />
+                        <ImageView fx:id="Camera0" fitHeight="123.0" fitWidth="131.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@img/forbidden.png" />
+                           </image></ImageView>
                         <Button fx:id="btnC1" layoutX="37.0" layoutY="125.0" mnemonicParsing="false" onAction="#show" text="Mostrar" />
                      </children>
                   </Pane>
                   <Pane layoutY="160.0" prefHeight="151.0" prefWidth="131.0">
                      <children>
-                        <ImageView fx:id="Camera2" fitHeight="123.0" fitWidth="131.0" pickOnBounds="true" preserveRatio="true" />
+                        <ImageView fx:id="Camera2" fitHeight="123.0" fitWidth="131.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@img/forbidden.png" />
+                           </image></ImageView>
                         <Button fx:id="btnC3" layoutX="37.0" layoutY="125.0" mnemonicParsing="false" onAction="#show" text="Mostrar" />
                      </children>
                   </Pane>
                   <Pane layoutX="139.0" layoutY="166.0" prefHeight="151.0" prefWidth="131.0">
                      <children>
-                        <ImageView fx:id="Camera3" fitHeight="124.0" fitWidth="131.0" pickOnBounds="true" preserveRatio="true" />
+                        <ImageView fx:id="Camera3" fitHeight="124.0" fitWidth="131.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@img/forbidden.png" />
+                           </image></ImageView>
                         <Button fx:id="btnC4" layoutX="37.0" layoutY="125.0" mnemonicParsing="false" onAction="#show" text="Mostrar" />
                      </children>
                   </Pane>
                   <Pane layoutY="321.0" prefHeight="151.0" prefWidth="131.0">
                      <children>
-                        <ImageView fx:id="Camera4" fitHeight="124.0" fitWidth="131.0" pickOnBounds="true" preserveRatio="true" />
+                        <ImageView fx:id="Camera4" fitHeight="124.0" fitWidth="131.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@img/forbidden.png" />
+                           </image></ImageView>
                         <Button fx:id="btnC5" layoutX="37.0" layoutY="125.0" mnemonicParsing="false" onAction="#show" text="Mostrar" />
                      </children>
                   </Pane>
                   <Pane layoutX="132.0" layoutY="321.0" prefHeight="151.0" prefWidth="131.0">
                      <children>
-                        <ImageView fx:id="Camera5" fitHeight="125.0" fitWidth="131.0" pickOnBounds="true" preserveRatio="true" style="-fx-background-radius: 100;" />
+                        <ImageView fx:id="Camera5" fitHeight="125.0" fitWidth="131.0" pickOnBounds="true" preserveRatio="true" style="-fx-background-radius: 100;">
+                           <image>
+                              <Image url="@img/forbidden.png" />
+                           </image></ImageView>
                         <Button fx:id="btnC6" layoutX="37.0" layoutY="125.0" mnemonicParsing="false" onAction="#show" text="Mostrar" />
                      </children>
                   </Pane>
