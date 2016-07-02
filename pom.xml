@@ -44,7 +44,11 @@
             <artifactId>hibernate-core</artifactId>
             <version>5.2.0.Final</version>
         </dependency>
-
+        <dependency>
+            <groupId>org.controlsfx</groupId>
+            <artifactId>controlsfx</artifactId>
+            <version>8.40.10</version>
+        </dependency>
 
     </dependencies>
 

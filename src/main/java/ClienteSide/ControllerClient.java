@@ -124,7 +124,7 @@ public class ControllerClient {
         Imgcodecs.imencode(".png", frame, buffer);
         // build and return an Image created from the image encoded in the
         // buffer
-     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(buffer.toArray());
+        ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(buffer.toArray());
         try {
             iVideoData.setVideoData(new VideoData(buffer.toArray(),1,"TEST","LOCALHOST"));
         } catch (RemoteException e) {

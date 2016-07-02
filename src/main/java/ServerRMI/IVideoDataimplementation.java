@@ -12,7 +12,7 @@ public class IVideoDataimplementation  extends UnicastRemoteObject implements IV
 
     VideoData videoData;
 
-    protected IVideoDataimplementation() throws RemoteException {
+    public IVideoDataimplementation() throws RemoteException {
     }
 
     @Override
