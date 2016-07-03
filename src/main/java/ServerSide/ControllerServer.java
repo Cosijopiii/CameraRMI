@@ -114,14 +114,11 @@ public class ControllerServer {
     void savePNG(){
         WritableImage image = frame.snapshot(new SnapshotParameters(), null);
 
-
-
-
         File file = new File(System.getProperty("user.home")+System.getProperty("file.separator")+"Snapshot"+System.getProperty("file.separator")+"img"+LocalDate.now()+System.nanoTime()+".png");
         try {
             ImageIO.write(SwingFXUtils.fromFXImage(image, null), "png", file);
         } catch (IOException e) {
-            // TODO: handle exception here
+
         }
 
     listFiles.add(file.getAbsolutePath());
@@ -279,8 +276,6 @@ public class ControllerServer {
             @Override
             public void handle(MouseEvent event) {
               String f=  ListViewSnap.getSelectionModel().getSelectedItem().toString();
-                System.out.println(f.substring(2));
-
                 try {
                     d.setContentNode(new ImageView(new Image(new File(f).toURI().toURL().toString())));
                 } catch (MalformedURLException e) {
