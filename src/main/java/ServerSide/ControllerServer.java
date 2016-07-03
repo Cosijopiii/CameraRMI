@@ -17,6 +17,7 @@ import java.util.concurrent.TimeUnit;
 
 import ServerRMI.IVideoData;
 import ServerRMI.IVideoDataimplementation;
+import ServerRMI.VideoData;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -99,49 +100,48 @@ public class ControllerServer {
     }
     private void getNetworkVideo() {
         try {
-        switch (iVideoData.getVideoData().getCameraClient()){
+            VideoData data=iVideoData.getVideoData();
+
+        switch (data.getCameraClient()){
             case 1:
                 if (flags[0]) {
-                    frame.setImage(new Image(new ByteArrayInputStream(iVideoData.getVideoData().getByteArray())));
+                    frame.setImage(new Image(new ByteArrayInputStream(data.getByteArray())));
 
                 }
-                Camera0.setImage( new Image(new ByteArrayInputStream(iVideoData.getVideoData().getByteArray())));
-
+                Camera0.setImage( new Image(new ByteArrayInputStream(data.getByteArray())));
                 break;
             case 2:
                 if (flags[1]) {
-                    frame.setImage(new Image(new ByteArrayInputStream(iVideoData.getVideoData().getByteArray())));
-
+                    frame.setImage(new Image(new ByteArrayInputStream(data.getByteArray())));
                 }
-                Camera1.setImage( new Image(new ByteArrayInputStream(iVideoData.getVideoData().getByteArray())));
+                Camera1.setImage( new Image(new ByteArrayInputStream(data.getByteArray())));
                 break;
             case 3:
                 if (flags[2]) {
-                    frame.setImage(new Image(new ByteArrayInputStream(iVideoData.getVideoData().getByteArray())));
-
+                    frame.setImage(new Image(new ByteArrayInputStream(data.getByteArray())));
                 }
-                Camera2.setImage( new Image(new ByteArrayInputStream(iVideoData.getVideoData().getByteArray())));
+                Camera2.setImage( new Image(new ByteArrayInputStream(data.getByteArray())));
                 break;
             case 4:
                 if (flags[3]) {
-                    frame.setImage(new Image(new ByteArrayInputStream(iVideoData.getVideoData().getByteArray())));
+                    frame.setImage(new Image(new ByteArrayInputStream(data.getByteArray())));
 
                 }
-                Camera3.setImage( new Image(new ByteArrayInputStream(iVideoData.getVideoData().getByteArray())));
+                Camera3.setImage(new Image(new ByteArrayInputStream(data.getByteArray())));
                 break;
             case 5:
                 if (flags[4]) {
-                    frame.setImage(new Image(new ByteArrayInputStream(iVideoData.getVideoData().getByteArray())));
+                    frame.setImage(new Image(new ByteArrayInputStream(data.getByteArray())));
                     Camera4=null;
                 }
-                Camera4.setImage( new Image(new ByteArrayInputStream(iVideoData.getVideoData().getByteArray())));
+                Camera4.setImage(new Image(new ByteArrayInputStream(data.getByteArray())));
                 break;
             case 6:
                 if (flags[5]) {
-                    frame.setImage(new Image(new ByteArrayInputStream(iVideoData.getVideoData().getByteArray())));
+                    frame.setImage(new Image(new ByteArrayInputStream(data.getByteArray())));
                     Camera5=null;
                 }
-                Camera5.setImage( new Image(new ByteArrayInputStream(iVideoData.getVideoData().getByteArray())));
+                Camera5.setImage( new Image(new ByteArrayInputStream(data.getByteArray())));
                 break;
             default:
                 break;
