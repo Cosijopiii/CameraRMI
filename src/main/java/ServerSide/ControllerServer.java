@@ -3,15 +3,21 @@ package ServerSide;
 import ServerRMI.IVideoData;
 import ServerRMI.IVideoDataimplementation;
 import ServerRMI.VideoData;
+import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.SnapshotParameters;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import javafx.scene.control.MenuItem;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.image.WritableImage;
 
+import javax.imageio.ImageIO;
 import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.rmi.Naming;
 import java.rmi.NoSuchObjectException;
@@ -20,6 +26,8 @@ import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -96,7 +104,20 @@ public class ControllerServer {
         timer.scheduleWithFixedDelay(grab, 0, 100, TimeUnit.MILLISECONDS);
 
     }
+    @FXML
+    void savePNG(){
+        WritableImage image = frame.snapshot(new SnapshotParameters(), null);
 
+        // TODO: probably use a file chooser here
+        LocalDate time= LocalDate.now();
+
+        File file = new File(System.getProperty("user.home")+"/Snapshot/img"+time.toString()+".png");
+        try {
+            ImageIO.write(SwingFXUtils.fromFXImage(image, null), "png", file);
+        } catch (IOException e) {
+            // TODO: handle exception here
+        }
+    }
     private void getNetworkVideo() {
         try {
             VideoData data = iVideoData.getVideoData();
@@ -150,7 +171,7 @@ public class ControllerServer {
     }
 
     @FXML
-    void serverOFF(ActionEvent event) {
+    void serverOFF() {
         try {
             UnicastRemoteObject.unexportObject(iVideoDataimplementation, true);
         } catch (NoSuchObjectException e) {
@@ -159,7 +180,7 @@ public class ControllerServer {
     }
 
     @FXML
-    void serverON(ActionEvent event) throws RemoteException {
+    void serverON() throws RemoteException {
         Registry registry = LocateRegistry.createRegistry(1099);
 
         iVideoDataimplementation = new IVideoDataimplementation();
@@ -180,7 +201,12 @@ public class ControllerServer {
 
     @FXML
     void serverReset(ActionEvent event) {
-
+        serverOFF();
+        try {
+            serverON();
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
     }
 
     void setFlags(int pos) {

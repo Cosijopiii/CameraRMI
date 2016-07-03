@@ -42,7 +42,7 @@
                   </ImageView>
                </children>
             </Pane>
-            <Button fx:id="btnSnapFrame" layoutX="204.0" layoutY="391.0" mnemonicParsing="false" onAction="#start">
+            <Button fx:id="btnSnapFrame" layoutX="204.0" layoutY="391.0" mnemonicParsing="false" onAction="#savePNG">
                <graphic>
                   <ImageView>
                      <image>

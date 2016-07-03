@@ -28,7 +28,7 @@ public class ClienteMain extends Application {
             @Override
             public void handle(WindowEvent event) {
                 Platform.exit();
-
+                System.exit(0);
             }
         });
         ControllerClient controllerClient=loader.getController();
