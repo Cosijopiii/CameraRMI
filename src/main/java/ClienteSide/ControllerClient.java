@@ -54,10 +54,10 @@ public class ControllerClient {
             try {
                 iVideoData = (IVideoData) Naming.lookup("rmi://" +ip + ":1099/videoData");
             } catch (NotBoundException | MalformedURLException | RemoteException e) {
-                e.printStackTrace();
+
+                FxDialogs.showInformation("Fallo", "Error al conectarse al servidor " + ip + " con exito");
             }
             FxDialogs.showInformation("Exito", "Se conecto al servidor " + ip + " con exito");
-
         }
     }
     @FXML
