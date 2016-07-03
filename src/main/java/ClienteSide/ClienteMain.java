@@ -24,15 +24,13 @@ public class ClienteMain extends Application {
         primaryStage.setTitle("RMISecurity Camera");
         primaryStage.setScene(new Scene(root));
         primaryStage.show();
-        primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
-            @Override
-            public void handle(WindowEvent event) {
-                Platform.exit();
-                System.exit(0);
-            }
-        });
+
         ControllerClient controllerClient=loader.getController();
-        controllerClient.init();
+        controllerClient.init();primaryStage.setOnCloseRequest(event -> {
+            controllerClient.Start();
+            System.exit(0);
+        });
+
     }
 
     public static void main(String[] args) {

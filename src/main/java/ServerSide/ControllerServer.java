@@ -3,8 +3,11 @@ package ServerSide;
 import ServerRMI.IVideoData;
 import ServerRMI.IVideoDataimplementation;
 import ServerRMI.VideoData;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.SnapshotParameters;
 import javafx.scene.control.Button;
@@ -13,6 +16,8 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.image.WritableImage;
+import javafx.scene.input.MouseEvent;
+import org.controlsfx.control.PopOver;
 
 import javax.imageio.ImageIO;
 import java.io.ByteArrayInputStream;
@@ -28,6 +33,7 @@ import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -51,7 +57,7 @@ public class ControllerServer {
     private Button btnSnapFrame;
 
     @FXML
-    private ListView<?> ListViewSnap;
+    private ListView<String> ListViewSnap;
 
     @FXML
     private ImageView Camera1;
@@ -88,7 +94,7 @@ public class ControllerServer {
 
     @FXML
     private Button btnC6;
-
+    ObservableList<String> listFiles;
     @FXML
     private MenuItem mntIniciarCamaras;
     private IVideoData iVideoData;
@@ -108,15 +114,17 @@ public class ControllerServer {
     void savePNG(){
         WritableImage image = frame.snapshot(new SnapshotParameters(), null);
 
-        // TODO: probably use a file chooser here
-        LocalDate time= LocalDate.now();
 
-        File file = new File(System.getProperty("user.home")+"/Snapshot/img"+time.toString()+".png");
+
+
+        File file = new File(System.getProperty("user.home")+System.getProperty("file.separator")+"Snapshot"+System.getProperty("file.separator")+"img"+LocalDate.now()+System.nanoTime()+".png");
         try {
             ImageIO.write(SwingFXUtils.fromFXImage(image, null), "png", file);
         } catch (IOException e) {
             // TODO: handle exception here
         }
+
+    listFiles.add(file.getAbsolutePath());
     }
     private void getNetworkVideo() {
         try {
@@ -241,10 +249,46 @@ public class ControllerServer {
             setFlags(5);
         }
     }
+    void updateList(){
+
+        listFiles.clear();
+        File[] files=new File(System.getProperty("user.home")+System.getProperty("file.separator")+"Snapshot").listFiles();
+
+        for (File file : files) {
+            if (file.isFile()) {
+                listFiles.add(file.getAbsolutePath());
+            }
+        }
+    }
+
 
     @FXML
     void initialize() {
+        File[] files=new File(System.getProperty("user.home")+System.getProperty("file.separator")+"Snapshot").listFiles();
+       listFiles= FXCollections.observableArrayList();
+        if (files != null) {
+            for (File file : files) {
+                if (file.isFile()) {
+                    listFiles.add(file.getAbsolutePath());
+                }
+            }
+        }
+        ListViewSnap.setItems(listFiles);
+        PopOver d =new PopOver();;
+        ListViewSnap.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+              String f=  ListViewSnap.getSelectionModel().getSelectedItem().toString();
+                System.out.println(f.substring(2));
 
+                try {
+                    d.setContentNode(new ImageView(new Image(new File(f).toURI().toURL().toString())));
+                } catch (MalformedURLException e) {
+                    e.printStackTrace();
+                }
+                d.show(ListViewSnap);
+            }
+        });
     }
 
 }

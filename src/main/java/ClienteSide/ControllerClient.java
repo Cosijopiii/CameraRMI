@@ -56,12 +56,13 @@ public class ControllerClient {
             } catch (NotBoundException | MalformedURLException | RemoteException e) {
 
                 FxDialogs.showInformation("Fallo", "Error al conectarse al servidor " + ip + " con exito");
+                return;
             }
             FxDialogs.showInformation("Exito", "Se conecto al servidor " + ip + " con exito");
         }
     }
     @FXML
-    protected  void Start() {
+    public   void Start() {
 
         if (!cameraActive){
             capture.open(0);
