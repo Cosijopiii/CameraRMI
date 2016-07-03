@@ -7,6 +7,7 @@ import ServerRMI.IVideoData;
 import ServerRMI.VideoData;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.TextArea;
 import javafx.scene.image.Image;
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
@@ -28,6 +29,8 @@ public class ControllerClient {
 
     @FXML
     private Button Start;
+    @FXML
+    private TextArea txtid;
     private IVideoData iVideoData;
     // a timer for acquiring the video stream
     private ScheduledExecutorService timer;
@@ -40,6 +43,13 @@ public class ControllerClient {
     void init()
     {
         this.capture = new VideoCapture();
+
+
+    }
+    @FXML
+    void Conecting(){
+
+
         try {
             iVideoData= (IVideoData) Naming.lookup("rmi://"+"Localhost"+":1099/videoData");
         } catch (NotBoundException | MalformedURLException | RemoteException e) {
@@ -47,6 +57,7 @@ public class ControllerClient {
         }
 
     }
+
     @FXML
     protected  void Start() {
 
@@ -58,7 +69,7 @@ public class ControllerClient {
                 Runnable Grabber = this::grabFrame;
 
                 timer = Executors.newSingleThreadScheduledExecutor();
-                timer.scheduleAtFixedRate(Grabber,0,33, TimeUnit.MILLISECONDS);
+                timer.scheduleAtFixedRate(Grabber,0,60, TimeUnit.MILLISECONDS);
             }else
             {
 
@@ -126,7 +137,7 @@ public class ControllerClient {
         // buffer
         ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(buffer.toArray());
         try {
-            iVideoData.setVideoData(new VideoData(buffer.toArray(),1,"TEST","LOCALHOST"));
+            iVideoData.setVideoData(new VideoData(buffer.toArray(),Integer.parseInt(txtid.getText()),"TEST","LOCALHOST"));
         } catch (RemoteException e) {
             e.printStackTrace();
         }

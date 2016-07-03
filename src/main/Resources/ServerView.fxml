@@ -64,7 +64,7 @@
                            <image>
                               <Image url="@img/forbidden.png" />
                            </image></ImageView>
-                        <Button fx:id="btnC2" layoutX="37.0" layoutY="125.0" mnemonicParsing="false" onAction="#show" text="Mostrar" />
+                        <Button fx:id="btnC2" layoutX="33.0" layoutY="124.0" mnemonicParsing="false" onAction="#show" text="Mostrar" />
                      </children>
                   </Pane>
                   <Pane prefHeight="151.0" prefWidth="131.0">
@@ -73,7 +73,7 @@
                            <image>
                               <Image url="@img/forbidden.png" />
                            </image></ImageView>
-                        <Button fx:id="btnC1" layoutX="37.0" layoutY="125.0" mnemonicParsing="false" onAction="#show" text="Mostrar" />
+                        <Button fx:id="btnC1" layoutX="33.0" layoutY="124.0" mnemonicParsing="false" onAction="#show" text="Mostrar" />
                      </children>
                   </Pane>
                   <Pane layoutY="160.0" prefHeight="151.0" prefWidth="131.0">
@@ -82,16 +82,16 @@
                            <image>
                               <Image url="@img/forbidden.png" />
                            </image></ImageView>
-                        <Button fx:id="btnC3" layoutX="37.0" layoutY="125.0" mnemonicParsing="false" onAction="#show" text="Mostrar" />
+                        <Button fx:id="btnC3" layoutX="33.0" layoutY="124.0" mnemonicParsing="false" onAction="#show" text="Mostrar" />
                      </children>
                   </Pane>
-                  <Pane layoutX="139.0" layoutY="166.0" prefHeight="151.0" prefWidth="131.0">
+                  <Pane layoutX="135.0" layoutY="160.0" prefHeight="151.0" prefWidth="131.0">
                      <children>
                         <ImageView fx:id="Camera3" fitHeight="124.0" fitWidth="131.0" pickOnBounds="true" preserveRatio="true">
                            <image>
                               <Image url="@img/forbidden.png" />
                            </image></ImageView>
-                        <Button fx:id="btnC4" layoutX="37.0" layoutY="125.0" mnemonicParsing="false" onAction="#show" text="Mostrar" />
+                        <Button fx:id="btnC4" layoutX="29.0" layoutY="124.0" mnemonicParsing="false" onAction="#show" text="Mostrar" />
                      </children>
                   </Pane>
                   <Pane layoutY="321.0" prefHeight="151.0" prefWidth="131.0">
@@ -100,7 +100,7 @@
                            <image>
                               <Image url="@img/forbidden.png" />
                            </image></ImageView>
-                        <Button fx:id="btnC5" layoutX="37.0" layoutY="125.0" mnemonicParsing="false" onAction="#show" text="Mostrar" />
+                        <Button fx:id="btnC5" layoutX="29.0" layoutY="124.0" mnemonicParsing="false" onAction="#show" text="Mostrar" />
                      </children>
                   </Pane>
                   <Pane layoutX="132.0" layoutY="321.0" prefHeight="151.0" prefWidth="131.0">
@@ -109,12 +109,12 @@
                            <image>
                               <Image url="@img/forbidden.png" />
                            </image></ImageView>
-                        <Button fx:id="btnC6" layoutX="37.0" layoutY="125.0" mnemonicParsing="false" onAction="#show" text="Mostrar" />
+                        <Button fx:id="btnC6" layoutX="30.0" layoutY="124.0" mnemonicParsing="false" onAction="#show" text="Mostrar" />
                      </children>
                   </Pane>
                </children>
             </Pane>
-            <Label layoutX="94.0" layoutY="530.0" prefHeight="33.0" prefWidth="104.0" text="Camaras" textAlignment="CENTER" wrapText="true">
+            <Label layoutX="82.0" layoutY="531.0" prefHeight="33.0" prefWidth="123.0" text="Camaras" textAlignment="CENTER" wrapText="true">
                <font>
                   <Font name="Roboto Light" size="26.0" />
                </font></Label>

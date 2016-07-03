@@ -19,11 +19,12 @@
             </ImageView>
          </graphic>
       </Button>
-      <TextArea layoutX="37.0" layoutY="80.0" prefHeight="0.0" prefWidth="212.0">
+      <TextArea fx:id="txtid" layoutX="37.0" layoutY="80.0" prefHeight="0.0" prefWidth="212.0">
          <effect>
             <Reflection />
          </effect></TextArea>
       <Label layoutX="36.0" layoutY="47.0" text="Introdusca el ID de la computadora" />
       <Label layoutX="278.0" layoutY="130.0" prefHeight="42.0" prefWidth="76.0" text="Iniciar transmicion" textAlignment="CENTER" wrapText="true" />
+      <Button layoutX="36.0" layoutY="159.0" mnemonicParsing="false" onAction="#Conecting" prefHeight="27.0" prefWidth="212.0" text="Conectarse con el servidor" />
    </children>
 </AnchorPane>

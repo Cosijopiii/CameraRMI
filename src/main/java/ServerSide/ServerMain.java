@@ -27,8 +27,6 @@ public class ServerMain extends Application {
         session.getTransaction().commit();
         session.close();*/
         launch(args);
-
-
     }
 }
 

@@ -94,7 +94,7 @@ public class ControllerServer {
         frame.setPreserveRatio(true);
         Runnable grab= this::getNetworkVideo;
         timer= Executors.newSingleThreadScheduledExecutor();
-        timer.scheduleAtFixedRate(grab,0,33, TimeUnit.MILLISECONDS);
+        timer.scheduleAtFixedRate(grab,0,60, TimeUnit.MILLISECONDS);
     }
     private void getNetworkVideo() {
         try {
