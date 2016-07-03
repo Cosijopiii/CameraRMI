@@ -3,6 +3,7 @@ package ClienteSide;
 /**
  * Created by COSI on 25/06/2016.
  */
+import HibernateUtil.FxDialogs;
 import ServerRMI.IVideoData;
 import ServerRMI.VideoData;
 import javafx.fxml.FXML;
@@ -44,20 +45,21 @@ public class ControllerClient {
     {
         this.capture = new VideoCapture();
 
-
     }
     @FXML
-    void Conecting(){
+    void Conecting() {
 
+        String ip = FxDialogs.showTextInput("IP del servidor", "Introdusca la ip del servidor", "localhost");
+        if (ip!=null){
+            try {
+                iVideoData = (IVideoData) Naming.lookup("rmi://" +ip + ":1099/videoData");
+            } catch (NotBoundException | MalformedURLException | RemoteException e) {
+                e.printStackTrace();
+            }
+            FxDialogs.showInformation("Exito", "Se conecto al servidor " + ip + " con exito");
 
-        try {
-            iVideoData= (IVideoData) Naming.lookup("rmi://"+"Localhost"+":1099/videoData");
-        } catch (NotBoundException | MalformedURLException | RemoteException e) {
-            e.printStackTrace();
         }
-
     }
-
     @FXML
     protected  void Start() {
 
@@ -79,7 +81,7 @@ public class ControllerClient {
             cameraActive=false;
             try {
                 timer.shutdown();
-                timer.awaitTermination(33,TimeUnit.MILLISECONDS);
+                timer.awaitTermination(60,TimeUnit.MILLISECONDS);
             }catch (InterruptedException e)
             {
                 System.err.println("Exception in stopping the frame capture, trying to release the camera now... " + e);

@@ -88,7 +88,8 @@ public class ControllerServer {
     private MenuItem mntIniciarCamaras;
     private IVideoData iVideoData;
     private ScheduledExecutorService timer;
-   private IVideoDataimplementation iVideoDataimplementation;
+    private IVideoDataimplementation iVideoDataimplementation;
+    private boolean[]flags={false,false,false,false,false,false};
     @FXML
     void start() {
         frame.setPreserveRatio(true);
@@ -100,21 +101,46 @@ public class ControllerServer {
         try {
         switch (iVideoData.getVideoData().getCameraClient()){
             case 1:
+                if (flags[0]) {
+                    frame.setImage(new Image(new ByteArrayInputStream(iVideoData.getVideoData().getByteArray())));
+
+                }
                 Camera0.setImage( new Image(new ByteArrayInputStream(iVideoData.getVideoData().getByteArray())));
+
                 break;
             case 2:
+                if (flags[1]) {
+                    frame.setImage(new Image(new ByteArrayInputStream(iVideoData.getVideoData().getByteArray())));
+
+                }
                 Camera1.setImage( new Image(new ByteArrayInputStream(iVideoData.getVideoData().getByteArray())));
                 break;
             case 3:
+                if (flags[2]) {
+                    frame.setImage(new Image(new ByteArrayInputStream(iVideoData.getVideoData().getByteArray())));
+
+                }
                 Camera2.setImage( new Image(new ByteArrayInputStream(iVideoData.getVideoData().getByteArray())));
                 break;
             case 4:
+                if (flags[3]) {
+                    frame.setImage(new Image(new ByteArrayInputStream(iVideoData.getVideoData().getByteArray())));
+
+                }
                 Camera3.setImage( new Image(new ByteArrayInputStream(iVideoData.getVideoData().getByteArray())));
                 break;
             case 5:
+                if (flags[4]) {
+                    frame.setImage(new Image(new ByteArrayInputStream(iVideoData.getVideoData().getByteArray())));
+                    Camera4=null;
+                }
                 Camera4.setImage( new Image(new ByteArrayInputStream(iVideoData.getVideoData().getByteArray())));
                 break;
             case 6:
+                if (flags[5]) {
+                    frame.setImage(new Image(new ByteArrayInputStream(iVideoData.getVideoData().getByteArray())));
+                    Camera5=null;
+                }
                 Camera5.setImage( new Image(new ByteArrayInputStream(iVideoData.getVideoData().getByteArray())));
                 break;
             default:
@@ -166,10 +192,31 @@ public class ControllerServer {
     void serverReset(ActionEvent event) {
 
     }
+    void setFlags(int pos){
 
+        for (int i = 0; i < 6; i++) {
+            if(pos==i)
+                flags[i]=true;
+            else
+                flags[i]=false;
+
+        }
+    }
     @FXML
     void show(ActionEvent event) {
-
+        if (event.getSource().equals(btnC1)){
+          setFlags(0);
+        } if (event.getSource().equals(btnC2)){
+            setFlags(1);
+        } if (event.getSource().equals(btnC3)){
+            setFlags(2);
+        } if (event.getSource().equals(btnC4)){
+            setFlags(3);
+        } if (event.getSource().equals(btnC5)){
+            setFlags(4);
+        } if (event.getSource().equals(btnC6)){
+            setFlags(5);
+        }
     }
 
     @FXML
