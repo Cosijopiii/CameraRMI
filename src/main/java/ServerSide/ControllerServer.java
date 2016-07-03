@@ -3,12 +3,11 @@ package ServerSide;
 import ServerRMI.IVideoAudioData;
 import ServerRMI.IVideoAudioDataimplementation;
 import ServerRMI.VideoAudioData;
-import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.concurrent.Task;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.SnapshotParameters;
 import javafx.scene.control.Button;
@@ -18,15 +17,11 @@ import javafx.scene.control.ToggleButton;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.image.WritableImage;
-import javafx.scene.input.MouseEvent;
 import org.controlsfx.control.PopOver;
 
 import javax.imageio.ImageIO;
 import javax.sound.sampled.*;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.net.MalformedURLException;
 import java.rmi.Naming;
 import java.rmi.NoSuchObjectException;
@@ -107,19 +102,50 @@ public class ControllerServer {
     private boolean[] flags = {false, false, false, false, false, false};
     private boolean flagToogleBtn;
     private ByteArrayOutputStream out;
+    File wavFile = new File(System.getProperty("user.home")+"/a.wav");
+   // File wavFile = new File("sound/a.wav");
+
+    // format of audio file
+    AudioFileFormat.Type fileType = AudioFileFormat.Type.WAVE;
+
+    // the line from which audio data is captured
+    TargetDataLine line;
 
     @FXML
-    void SendAudio(ActionEvent event) {
+    void SendAudio(ActionEvent event) throws IOException {
         flagToogleBtn=toggleButtonAudio.isSelected();
         if (flagToogleBtn){
             toggleButtonAudio.setGraphic(new ImageView("img/stop.png"));
+            if(!wavFile.exists()){
+                wavFile.createNewFile();
+            }
+            Task<Void> v=new Task<Void>() {
+                @Override
+                protected Void call() throws Exception {
+                    startd();
+                    return null;
+                }
+            };
+
+            new Thread(v).start();
+
         }else{
             toggleButtonAudio.setGraphic(new ImageView("img/microphone.png"));
-            try {
-                iVideoAudioData.setVideoAudioData(new VideoAudioData(out.toByteArray()));
-            } catch (RemoteException e) {
-                e.printStackTrace();
-            }
+          Task<Void> v=new Task<Void>() {
+              @Override
+              protected Void call() throws Exception {
+                  finishAndSend();
+                    return null;
+              }
+          };
+
+           new Thread(v).start();
+
+
+
+
+
+
         }
 
     }
@@ -303,55 +329,70 @@ public class ControllerServer {
             d.show(ListViewSnap);
         });
     }
+    void startd() {
 
-    private void captureAudio() {
         try {
-            final AudioFormat format = getFormat();
-            DataLine.Info info = new DataLine.Info(
-                    TargetDataLine.class, format);
-            final TargetDataLine line = (TargetDataLine)
-                    AudioSystem.getLine(info);
+
+            AudioFormat format = getFormat();
+            DataLine.Info info = new DataLine.Info(TargetDataLine.class, format);
+
+            // checks if system supports the data line
+            if (!AudioSystem.isLineSupported(info)) {
+                System.out.println("Line not supported");
+                System.exit(0);
+            }
+            line = (TargetDataLine) AudioSystem.getLine(info);
             line.open(format);
-            line.start();
-            Runnable runner = new Runnable() {
-                int bufferSize = (int)format.getSampleRate()
-                        * format.getFrameSize();
-                byte buffer[] = new byte[bufferSize];
+            line.start();   // start capturing
 
-                public void run() {
-                    out = new ByteArrayOutputStream();
-                    try {
-                        while (flagToogleBtn) { //mientras este presionado
-                            int count =
-                                    line.read(buffer, 0, buffer.length);
-                            if (count > 0) {
-                                out.write(buffer, 0, count);
-                            }
-                        }
-                        out.close();
-                    } catch (IOException e) {
-                        System.err.println("I/O problems: " + e);
-                        System.exit(-1);
-                    }
-                }
-            };
+            System.out.println("Start capturing...");
 
-            Platform.runLater(runner);
-            //Thread captureThread = new Thread(runner);
-            //captureThread.start();
-        } catch (LineUnavailableException e) {
-            System.err.println("Line unavailable: " + e);
-            System.exit(-2);
+            AudioInputStream ais = new AudioInputStream(line);
+
+            System.out.println("Start recording...");
+
+            // start recording
+            AudioSystem.write(ais, fileType, wavFile);
+
+        } catch (LineUnavailableException ex) {
+            ex.printStackTrace();
+        } catch (IOException ioe) {
+            ioe.printStackTrace();
         }
     }
+
+    void finishAndSend() {
+        line.stop();
+        line.close();
+        System.out.println("Finished");
+        byte [] mybytearray  = new byte [(int)wavFile.length()];
+        try {
+
+            FileInputStream fileInputStream=new FileInputStream(wavFile);
+            BufferedInputStream bufferedInputStream=new BufferedInputStream(fileInputStream);
+            bufferedInputStream.read(mybytearray,0,mybytearray.length);
+
+            iVideoDataimplementation.SetAudioData(new VideoAudioData(mybytearray));
+
+
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     public static AudioFormat getFormat() {
-        float sampleRate = 8000;
+        float sampleRate = 16000;
         int sampleSizeInBits = 8;
-        int channels = 1;
+        int channels = 2;
         boolean signed = true;
         boolean bigEndian = true;
-        return new AudioFormat(sampleRate,
-                sampleSizeInBits, channels, signed, bigEndian);
+        AudioFormat format = new AudioFormat(sampleRate, sampleSizeInBits,
+                channels, signed, bigEndian);
+        return format;
+
     }
 
 

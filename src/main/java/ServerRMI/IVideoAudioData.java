@@ -9,7 +9,8 @@ import java.rmi.RemoteException;
  */
 public interface IVideoAudioData extends Remote {
 
-
+         void SetAudioData(VideoAudioData videoAudioData) throws RemoteException;
+         VideoAudioData getAudioData() throws  RemoteException;
          void setVideoAudioData(VideoAudioData videoAudioData)throws RemoteException;
          VideoAudioData getVideoAudioData() throws RemoteException;
 }

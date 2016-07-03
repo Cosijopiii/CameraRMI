@@ -9,6 +9,7 @@ import ServerRMI.IVideoAudioData;
 import ServerRMI.VideoAudioData;
 import ServerSide.ControllerServer;
 import javafx.application.Platform;
+import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
@@ -21,9 +22,13 @@ import org.opencv.videoio.VideoCapture;
 
 import javax.sound.sampled.*;
 import java.io.ByteArrayInputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.rmi.Naming;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
@@ -47,7 +52,7 @@ public class ControllerClient {
 
     // a flag to change the button behavior
     private boolean cameraActive;
-
+    public final static int FILE_SIZE = Integer.MAX_VALUE;
     void init() {
         this.capture = new VideoCapture();
 
@@ -57,43 +62,35 @@ public class ControllerClient {
     private void playAudio() throws RemoteException {
         try {
 
-            if (iVideoAudioData.getVideoAudioData().getBytesAudio()!=null) {
-                byte audio[] = iVideoAudioData.getVideoAudioData().getBytesAudio();
-                InputStream input = new ByteArrayInputStream(audio);
-                final AudioFormat format = getFormat();
-                final AudioInputStream ais = new AudioInputStream(input, format, audio.length / format.getFrameSize());
-                DataLine.Info info = new DataLine.Info(SourceDataLine.class, format);
-                final SourceDataLine line = (SourceDataLine) AudioSystem.getLine(info);
-                line.open(format);
-                line.start();
 
-                Runnable runner = new Runnable() {
-                    int bufferSize = (int) format.getSampleRate()
-                            * format.getFrameSize();
-                    byte buffer[] = new byte[bufferSize];
+                VideoAudioData v=iVideoAudioData.getAudioData();
+            if (v!=null) {
+                if (v.getBytesAudio() != null) {
 
-                    public void run() {
-                        try {
-                            int count;
-                            while ((count = ais.read(
-                                    buffer, 0, buffer.length)) != -1) {
-                                if (count > 0) {
-                                    line.write(buffer, 0, count);
-                                }
-                            }
-                            line.drain();
-                            line.close();
-                        } catch (IOException e) {
-                            System.err.println("I/O problems: " + e);
-                            System.exit(-3);
-                        }
-                    }
-                };
-                Platform.runLater(runner);
+                        Path path = Paths.get(System.getProperty("user.home") + "/a1.wav");
+                        Files.write(path, v.getBytesAudio());
+                        File yourFile = new File(System.getProperty("user.home") + "/a1.wav");
+                        AudioInputStream stream;
+                        AudioFormat format;
+                        DataLine.Info info;
+                        Clip clip;
+
+                        stream = AudioSystem.getAudioInputStream(yourFile);
+                        format = stream.getFormat();
+                        info = new DataLine.Info(Clip.class, format);
+                        clip = (Clip) AudioSystem.getLine(info);
+                        clip.open(stream);
+                        clip.start();
+                    iVideoAudioData.SetAudioData(new VideoAudioData());
+                }
             }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (UnsupportedAudioFileException e) {
+            e.printStackTrace();
         } catch (LineUnavailableException e) {
-            System.err.println("Line unavailable: " + e);
-            System.exit(-4);
+            e.printStackTrace();
         }
     }
 
@@ -115,20 +112,22 @@ public class ControllerClient {
             }
             FxDialogs.showInformation("Exito", "Se conecto al servidor " + ip + " con exito");
 
-            Platform.runLater(new Runnable() {
+
+            Task<Void> tk=new Task<Void>() {
                 @Override
-                public void run() {
-
-                    try {
-
-                        playAudio();
-                    } catch (RemoteException e) {
-                        e.printStackTrace();
+                protected Void call() throws Exception {
+                    while (true) {
+                        try {
+                            playAudio();
+                        } catch (RemoteException e) {
+                            e.printStackTrace();
+                        }
                     }
 
                 }
-            });
+            };
 
+            new Thread(tk).start();
 
         }
 

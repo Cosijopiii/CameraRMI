@@ -9,13 +9,19 @@ import java.rmi.server.UnicastRemoteObject;
 public class IVideoAudioDataimplementation extends UnicastRemoteObject implements IVideoAudioData {
 
     VideoAudioData videoAudioData;
-
+    VideoAudioData videoAudio;
     public IVideoAudioDataimplementation() throws RemoteException {
     }
 
 
+    public void SetAudioData(VideoAudioData videoAudio) throws RemoteException {
+    this.videoAudio=videoAudio;
+    }
 
 
+    public VideoAudioData getAudioData() throws RemoteException {
+        return videoAudio;
+    }
 
     public void setVideoAudioData(VideoAudioData videoAudioData) throws RemoteException {
         this.videoAudioData = videoAudioData;
