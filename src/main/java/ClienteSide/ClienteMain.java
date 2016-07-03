@@ -3,10 +3,13 @@ package ClienteSide;/**
  */
 
 import javafx.application.Application;
+import javafx.application.Platform;
+import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 import org.opencv.core.Core;
 
 import java.io.IOException;
@@ -21,6 +24,13 @@ public class ClienteMain extends Application {
         primaryStage.setTitle("RMISecurity Camera");
         primaryStage.setScene(new Scene(root));
         primaryStage.show();
+        primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+            @Override
+            public void handle(WindowEvent event) {
+                Platform.exit();
+
+            }
+        });
         ControllerClient controllerClient=loader.getController();
         controllerClient.init();
     }

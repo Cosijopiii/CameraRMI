@@ -71,7 +71,7 @@ public class ControllerClient {
                 Runnable Grabber = this::grabFrame;
 
                 timer = Executors.newSingleThreadScheduledExecutor();
-                timer.scheduleAtFixedRate(Grabber,0,60, TimeUnit.MILLISECONDS);
+                timer.scheduleAtFixedRate(Grabber,0,100, TimeUnit.MILLISECONDS);
             }else
             {
 
