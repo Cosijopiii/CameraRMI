@@ -1,8 +1,9 @@
 package ServerSide;
 
-import ServerRMI.IVideoData;
-import ServerRMI.IVideoDataimplementation;
-import ServerRMI.VideoData;
+import ServerRMI.IVideoAudioData;
+import ServerRMI.IVideoAudioDataimplementation;
+import ServerRMI.VideoAudioData;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.embed.swing.SwingFXUtils;
@@ -13,6 +14,7 @@ import javafx.scene.SnapshotParameters;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.ToggleButton;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.image.WritableImage;
@@ -20,7 +22,9 @@ import javafx.scene.input.MouseEvent;
 import org.controlsfx.control.PopOver;
 
 import javax.imageio.ImageIO;
+import javax.sound.sampled.*;
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -32,8 +36,6 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -91,24 +93,43 @@ public class ControllerServer {
 
     @FXML
     private ImageView Camera5;
+    @FXML
+    private ToggleButton toggleButtonAudio;
 
     @FXML
     private Button btnC6;
     ObservableList<String> listFiles;
     @FXML
     private MenuItem mntIniciarCamaras;
-    private IVideoData iVideoData;
+    private IVideoAudioData iVideoAudioData;
     private ScheduledExecutorService timer;
-    private IVideoDataimplementation iVideoDataimplementation;
+    private IVideoAudioDataimplementation iVideoDataimplementation;
     private boolean[] flags = {false, false, false, false, false, false};
+    private boolean flagToogleBtn;
+    private ByteArrayOutputStream out;
 
+    @FXML
+    void SendAudio(ActionEvent event) {
+        flagToogleBtn=toggleButtonAudio.isSelected();
+        if (flagToogleBtn){
+            toggleButtonAudio.setGraphic(new ImageView("img/stop.png"));
+        }else{
+            toggleButtonAudio.setGraphic(new ImageView("img/microphone.png"));
+            try {
+                iVideoAudioData.setVideoAudioData(new VideoAudioData(out.toByteArray()));
+            } catch (RemoteException e) {
+                e.printStackTrace();
+            }
+        }
+
+    }
     @FXML
     void start() {
         frame.setPreserveRatio(true);
         Runnable grab = this::getNetworkVideo;
         timer = Executors.newSingleThreadScheduledExecutor();
         timer.scheduleWithFixedDelay(grab, 0, 100, TimeUnit.MILLISECONDS);
-
+        mntIniciarCamaras.setText("Recargar camaras");
     }
     @FXML
     void savePNG(){
@@ -125,7 +146,7 @@ public class ControllerServer {
     }
     private void getNetworkVideo() {
         try {
-            VideoData data = iVideoData.getVideoData();
+            VideoAudioData data = iVideoAudioData.getVideoAudioData();
 
             switch (data.getCameraClient()) {
                 case 1:
@@ -188,7 +209,7 @@ public class ControllerServer {
     void serverON() throws RemoteException {
         Registry registry = LocateRegistry.createRegistry(1099);
 
-        iVideoDataimplementation = new IVideoDataimplementation();
+        iVideoDataimplementation = new IVideoAudioDataimplementation();
         try {
             Naming.rebind("rmi://" + "localhost" + ":1099/videoData", iVideoDataimplementation);
         } catch (MalformedURLException e) {
@@ -196,7 +217,7 @@ public class ControllerServer {
         }
 
         try {
-            iVideoData = (IVideoData) Naming.lookup("rmi://" + "localhost" + ":1099/videoData");
+            iVideoAudioData = (IVideoAudioData) Naming.lookup("rmi://" + "localhost" + ":1099/videoData");
         } catch (NotBoundException | MalformedURLException | RemoteException e) {
             e.printStackTrace();
         }
@@ -272,18 +293,66 @@ public class ControllerServer {
         }
         ListViewSnap.setItems(listFiles);
         PopOver d =new PopOver();;
-        ListViewSnap.setOnMouseClicked(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-              String f=  ListViewSnap.getSelectionModel().getSelectedItem().toString();
-                try {
-                    d.setContentNode(new ImageView(new Image(new File(f).toURI().toURL().toString())));
-                } catch (MalformedURLException e) {
-                    e.printStackTrace();
-                }
-                d.show(ListViewSnap);
+        ListViewSnap.setOnMouseClicked(event -> {
+          String f=  ListViewSnap.getSelectionModel().getSelectedItem().toString();
+            try {
+                d.setContentNode(new ImageView(new Image(new File(f).toURI().toURL().toString())));
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
             }
+            d.show(ListViewSnap);
         });
     }
+
+    private void captureAudio() {
+        try {
+            final AudioFormat format = getFormat();
+            DataLine.Info info = new DataLine.Info(
+                    TargetDataLine.class, format);
+            final TargetDataLine line = (TargetDataLine)
+                    AudioSystem.getLine(info);
+            line.open(format);
+            line.start();
+            Runnable runner = new Runnable() {
+                int bufferSize = (int)format.getSampleRate()
+                        * format.getFrameSize();
+                byte buffer[] = new byte[bufferSize];
+
+                public void run() {
+                    out = new ByteArrayOutputStream();
+                    try {
+                        while (flagToogleBtn) { //mientras este presionado
+                            int count =
+                                    line.read(buffer, 0, buffer.length);
+                            if (count > 0) {
+                                out.write(buffer, 0, count);
+                            }
+                        }
+                        out.close();
+                    } catch (IOException e) {
+                        System.err.println("I/O problems: " + e);
+                        System.exit(-1);
+                    }
+                }
+            };
+
+            Platform.runLater(runner);
+            //Thread captureThread = new Thread(runner);
+            //captureThread.start();
+        } catch (LineUnavailableException e) {
+            System.err.println("Line unavailable: " + e);
+            System.exit(-2);
+        }
+    }
+    public static AudioFormat getFormat() {
+        float sampleRate = 8000;
+        int sampleSizeInBits = 8;
+        int channels = 1;
+        boolean signed = true;
+        boolean bigEndian = true;
+        return new AudioFormat(sampleRate,
+                sampleSizeInBits, channels, signed, bigEndian);
+    }
+
 
 }

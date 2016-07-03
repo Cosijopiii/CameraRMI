@@ -14,9 +14,9 @@ public class VideoDataMain {
 
         Registry registry = LocateRegistry.createRegistry(1099);
 
-        IVideoDataimplementation iVideoDataimplementation=new IVideoDataimplementation();
+        IVideoAudioDataimplementation iVideoDataimplementation=new IVideoAudioDataimplementation();
         try {
-            Naming.rebind("rmi://"+"localhost"+":1099/videoData",iVideoDataimplementation);
+            Naming.rebind("rmi://"+"localhost"+":1099/videoAudioData",iVideoDataimplementation);
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }

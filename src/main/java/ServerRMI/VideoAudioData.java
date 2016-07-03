@@ -6,18 +6,26 @@ import java.io.Serializable;
 /**
  * Created by COSI on 25/06/2016.
  */
-public class VideoData implements Serializable {
+public class VideoAudioData implements Serializable {
 
     private  byte[] byteArray;
     private int cameraClient;
     private String nameCameraClient;
     private String ip;
 
-    public VideoData(){
+
+
+    private byte[] bytesAudio;
+
+    public VideoAudioData(byte[] bytesAudio) {
+        this.bytesAudio = bytesAudio;
+    }
+
+    public VideoAudioData(){
 
     }
 
-    public VideoData( byte[] byteArray, int cameraClient, String nameCameraClient, String ip) {
+    public VideoAudioData(byte[] byteArray, int cameraClient, String nameCameraClient, String ip) {
         this.byteArray = byteArray;
         this.cameraClient = cameraClient;
         this.nameCameraClient = nameCameraClient;
@@ -26,13 +34,20 @@ public class VideoData implements Serializable {
 
     @Override
     public String toString() {
-        return "VideoData{" +
+        return "VideoAudioData{" +
                 "nameCameraClient='" + nameCameraClient + '\'' +
                 ", ip='" + ip + '\'' +
                 ", cameraClient=" + cameraClient +
                 '}';
     }
 
+    public byte[] getBytesAudio() {
+        return bytesAudio;
+    }
+
+    public void setBytesAudio(byte[] bytesAudio) {
+        this.bytesAudio = bytesAudio;
+    }
     public byte[] getByteArray() {
         return byteArray;
     }

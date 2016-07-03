@@ -7,6 +7,7 @@
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.ToggleButton?>
 <?import javafx.scene.effect.Glow?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
@@ -14,7 +15,7 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="630.0" prefWidth="744.0" style="-fx-background-color: #455A64;" xmlns="http://javafx.com/javafx/null" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ServerSide.ControllerServer">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="630.0" prefWidth="744.0" style="-fx-background-color: #455A64;" xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ServerSide.ControllerServer">
    <children>
       <MenuBar prefHeight="25.0" prefWidth="553.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <menus>
@@ -42,7 +43,7 @@
                   </ImageView>
                </children>
             </Pane>
-            <Button fx:id="btnSnapFrame" layoutX="204.0" layoutY="391.0" mnemonicParsing="false" onAction="#savePNG">
+            <Button fx:id="btnSnapFrame" layoutX="161.0" layoutY="390.0" mnemonicParsing="false" onAction="#savePNG">
                <graphic>
                   <ImageView>
                      <image>
@@ -52,6 +53,15 @@
                </graphic>
             </Button>
             <ListView fx:id="ListViewSnap" layoutX="27.0" layoutY="447.0" prefHeight="136.0" prefWidth="402.0" />
+            <ToggleButton fx:id="toggleButtonAudio" layoutX="254.0" layoutY="390.0" mnemonicParsing="false" onAction="#SendAudio">
+               <graphic>
+                  <ImageView>
+                     <image>
+                        <Image url="@img/microphone.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+            </ToggleButton>
          </children>
       </Pane>
       <Pane layoutX="-1.0" layoutY="25.0" prefHeight="662.0" prefWidth="290.0" style="-fx-background-color: #B6B6B6;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="25.0">
