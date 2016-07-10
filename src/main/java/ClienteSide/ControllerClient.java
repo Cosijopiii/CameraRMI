@@ -1,14 +1,9 @@
 package ClienteSide;
 
-/**
- * Created by COSI on 25/06/2016.
- */
 
 import HibernateUtil.FxDialogs;
 import ServerRMI.IVideoAudioData;
 import ServerRMI.VideoAudioData;
-import ServerSide.ControllerServer;
-import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -19,13 +14,13 @@ import org.opencv.core.Mat;
 import org.opencv.core.MatOfByte;
 import org.opencv.imgcodecs.Imgcodecs;
 import org.opencv.videoio.VideoCapture;
-
 import javax.sound.sampled.*;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
+import java.net.InetAddress;
 import java.net.MalformedURLException;
+import java.net.UnknownHostException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -46,13 +41,10 @@ public class ControllerClient {
     private IVideoAudioData iVideoAudioData;
     // a timer for acquiring the video stream
     private ScheduledExecutorService timer;
-
     // the OpenCV object that performs the video capture
     private VideoCapture capture;
-
     // a flag to change the button behavior
     private boolean cameraActive;
-    public final static int FILE_SIZE = Integer.MAX_VALUE;
     void init() {
         this.capture = new VideoCapture();
 
@@ -62,10 +54,9 @@ public class ControllerClient {
     private void playAudio() throws RemoteException {
         try {
 
-
                 VideoAudioData v=iVideoAudioData.getAudioData();
             if (v!=null) {
-                if (v.getBytesAudio() != null) {
+                if (v.getBytesAudio() != null && v.getCameraClient()==Integer.parseInt(txtid.getText())) {
 
                         Path path = Paths.get(System.getProperty("user.home") + "/a1.wav");
                         Files.write(path, v.getBytesAudio());
@@ -85,17 +76,9 @@ public class ControllerClient {
                 }
             }
 
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (UnsupportedAudioFileException e) {
-            e.printStackTrace();
-        } catch (LineUnavailableException e) {
+        } catch (IOException | UnsupportedAudioFileException | LineUnavailableException e) {
             e.printStackTrace();
         }
-    }
-
-    private AudioFormat getFormat() {
-        return ControllerServer.getFormat();
     }
 
     @FXML
@@ -141,11 +124,8 @@ public class ControllerClient {
             capture.open(0);
             if (capture.isOpened()) {
                 cameraActive = true;
-
-                Runnable Grabber = this::grabFrame;
-
                 timer = Executors.newSingleThreadScheduledExecutor();
-                timer.scheduleAtFixedRate(Grabber, 0, 100, TimeUnit.MILLISECONDS);
+                timer.scheduleAtFixedRate(this::grabFrame, 0, 100, TimeUnit.MILLISECONDS);
             } else {
 
                 System.err.println("Failed to open the camera connection...");
@@ -206,8 +186,8 @@ public class ControllerClient {
         // buffer
         ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(buffer.toArray());
         try {
-            iVideoAudioData.setVideoAudioData(new VideoAudioData(buffer.toArray(), Integer.parseInt(txtid.getText()), "TEST", "LOCALHOST"));
-        } catch (RemoteException e) {
+            iVideoAudioData.setVideoAudioData(new VideoAudioData(buffer.toArray(), Integer.parseInt(txtid.getText()), "TEST", InetAddress.getLocalHost().getHostAddress()));
+        } catch (RemoteException | UnknownHostException e) {
             e.printStackTrace();
         }
         return new Image(byteArrayInputStream);

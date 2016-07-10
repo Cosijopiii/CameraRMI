@@ -17,8 +17,10 @@ public class VideoAudioData implements Serializable {
 
     private byte[] bytesAudio;
 
-    public VideoAudioData(byte[] bytesAudio) {
+    public VideoAudioData(byte[] bytesAudio,int cameraClient) {
         this.bytesAudio = bytesAudio;
+        this.cameraClient=cameraClient;
+
     }
 
     public VideoAudioData(){

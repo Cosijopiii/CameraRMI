@@ -100,9 +100,9 @@ public class ControllerServer {
     private ScheduledExecutorService timer;
     private IVideoAudioDataimplementation iVideoDataimplementation;
     private boolean[] flags = {false, false, false, false, false, false};
-    private boolean flagToogleBtn;
     private ByteArrayOutputStream out;
-    File wavFile = new File(System.getProperty("user.home")+"/a.wav");
+    private File wavFile = new File(System.getProperty("user.home")+"/a.wav");
+    public static int cameraActive=-1;
    // File wavFile = new File("sound/a.wav");
 
     // format of audio file
@@ -113,7 +113,7 @@ public class ControllerServer {
 
     @FXML
     void SendAudio(ActionEvent event) throws IOException {
-        flagToogleBtn=toggleButtonAudio.isSelected();
+        boolean flagToogleBtn = toggleButtonAudio.isSelected();
         if (flagToogleBtn){
             toggleButtonAudio.setGraphic(new ImageView("img/stop.png"));
             if(!wavFile.exists()){
@@ -176,38 +176,45 @@ public class ControllerServer {
 
             switch (data.getCameraClient()) {
                 case 1:
+
                     if (flags[0]) {
                         frame.setImage(new Image(new ByteArrayInputStream(data.getByteArray())));
+                        cameraActive=data.getCameraClient();
                     }
                     Camera0.setImage(new Image(new ByteArrayInputStream(data.getByteArray())));
                     break;
                 case 2:
                     if (flags[1]) {
                         frame.setImage(new Image(new ByteArrayInputStream(data.getByteArray())));
+                        cameraActive=data.getCameraClient();
                     }
                     Camera1.setImage(new Image(new ByteArrayInputStream(data.getByteArray())));
                     break;
                 case 3:
                     if (flags[2]) {
                         frame.setImage(new Image(new ByteArrayInputStream(data.getByteArray())));
+                        cameraActive=data.getCameraClient();
                     }
                     Camera2.setImage(new Image(new ByteArrayInputStream(data.getByteArray())));
                     break;
                 case 4:
                     if (flags[3]) {
                         frame.setImage(new Image(new ByteArrayInputStream(data.getByteArray())));
+                        cameraActive=data.getCameraClient();
                     }
                     Camera3.setImage(new Image(new ByteArrayInputStream(data.getByteArray())));
                     break;
                 case 5:
                     if (flags[4]) {
                         frame.setImage(new Image(new ByteArrayInputStream(data.getByteArray())));
+                        cameraActive=data.getCameraClient();
                     }
                     Camera4.setImage(new Image(new ByteArrayInputStream(data.getByteArray())));
                     break;
                 case 6:
                     if (flags[5]) {
                         frame.setImage(new Image(new ByteArrayInputStream(data.getByteArray())));
+                        cameraActive=data.getCameraClient();
                     }
                     Camera5.setImage(new Image(new ByteArrayInputStream(data.getByteArray())));
                     break;
@@ -264,10 +271,7 @@ public class ControllerServer {
     void setFlags(int pos) {
 
         for (int i = 0; i < 6; i++) {
-            if (pos == i)
-                flags[i] = true;
-            else
-                flags[i] = false;
+            flags[i] = pos == i;
 
         }
     }
@@ -318,9 +322,9 @@ public class ControllerServer {
             }
         }
         ListViewSnap.setItems(listFiles);
-        PopOver d =new PopOver();;
+        PopOver d =new PopOver();
         ListViewSnap.setOnMouseClicked(event -> {
-          String f=  ListViewSnap.getSelectionModel().getSelectedItem().toString();
+          String f= ListViewSnap.getSelectionModel().getSelectedItem();
             try {
                 d.setContentNode(new ImageView(new Image(new File(f).toURI().toURL().toString())));
             } catch (MalformedURLException e) {
@@ -354,44 +358,39 @@ public class ControllerServer {
             // start recording
             AudioSystem.write(ais, fileType, wavFile);
 
-        } catch (LineUnavailableException ex) {
+        } catch (LineUnavailableException | IOException ex) {
             ex.printStackTrace();
-        } catch (IOException ioe) {
-            ioe.printStackTrace();
         }
     }
 
-    void finishAndSend() {
+    private void finishAndSend() {
         line.stop();
         line.close();
         System.out.println("Finished");
         byte [] mybytearray  = new byte [(int)wavFile.length()];
         try {
 
-            FileInputStream fileInputStream=new FileInputStream(wavFile);
-            BufferedInputStream bufferedInputStream=new BufferedInputStream(fileInputStream);
+
+            BufferedInputStream bufferedInputStream=new BufferedInputStream(new FileInputStream(wavFile));
             bufferedInputStream.read(mybytearray,0,mybytearray.length);
 
-            iVideoDataimplementation.SetAudioData(new VideoAudioData(mybytearray));
+            iVideoDataimplementation.SetAudioData(new VideoAudioData(mybytearray,cameraActive));
 
 
 
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    public static AudioFormat getFormat() {
+    private static AudioFormat getFormat() {
         float sampleRate = 16000;
         int sampleSizeInBits = 8;
         int channels = 2;
-        boolean signed = true;
-        boolean bigEndian = true;
-        AudioFormat format = new AudioFormat(sampleRate, sampleSizeInBits,
-                channels, signed, bigEndian);
-        return format;
+
+        return  new AudioFormat(sampleRate, sampleSizeInBits,
+                channels, true, true);
+
 
     }
 
